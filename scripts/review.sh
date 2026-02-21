@@ -148,6 +148,9 @@ echo "score=$SCORE" >> "$GITHUB_OUTPUT"
   echo ""
   echo "**Summary:**"
   echo "$SUMMARY"
+  echo ""
+  echo "---"
+  echo "*AI-generated review by [CodeCritic](https://code-critic.com). Results may contain inaccuracies — verify before applying.*"
 } >> "$GITHUB_STEP_SUMMARY"
 
 # Post PR comment
@@ -156,7 +159,7 @@ if [ "$POST_COMMENT" = "true" ] && [ "$EVENT_NAME" = "pull_request" ] && [ -n "$
   COMMENT_BODY=$(jq -n \
     --arg score "$SCORE" \
     --arg summary "$SUMMARY" \
-    '{body: "## CodeCritic Review\n\n**Score:** \($score)/100\n\n**Summary:**\n\($summary)\n\n---\n*Automated review by [CodeCritic](https://code-critic.com)*"}')
+    '{body: "## CodeCritic Review\n\n**Score:** \($score)/100\n\n**Summary:**\n\($summary)\n\n---\n*AI-generated code review by [CodeCritic](https://code-critic.com). Results may contain inaccuracies — always verify suggestions before applying. [Report an issue](https://github.com/CodeCritic-Reviews/review-action/issues) | [Terms](https://code-critic.com/terms) | [Privacy](https://code-critic.com/privacy)*"}')
 
   curl -s -X POST \
     -H "Authorization: token $GITHUB_TOKEN" \
