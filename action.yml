@@ -1,0 +1,74 @@
+name: 'CodeCritic Review'
+description: 'AI-powered code review for your pull requests'
+author: 'CodeCritic Reviews'
+
+branding:
+  icon: 'code'
+  color: 'purple'
+
+inputs:
+  api_key:
+    description: 'Your CodeCritic API key'
+    required: true
+  api_url:
+    description: 'CodeCritic API URL'
+    required: false
+    default: 'https://api.code-critic.com'
+  wait_for_completion:
+    description: 'Wait for the review to complete before finishing'
+    required: false
+    default: 'true'
+  post_comment:
+    description: 'Post review results as a PR comment'
+    required: false
+    default: 'true'
+  timeout:
+    description: 'Maximum time to wait for review completion (in seconds)'
+    required: false
+    default: '600'
+
+outputs:
+  review_id:
+    description: 'The ID of the created review'
+    value: ${{ steps.review.outputs.review_id }}
+  score:
+    description: 'The review score (0-100)'
+    value: ${{ steps.results.outputs.score }}
+  status:
+    description: 'Final review status (completed, failed, timeout)'
+    value: ${{ steps.results.outputs.status }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run CodeCritic Review
+      id: review
+      shell: bash
+      env:
+        INPUT_API_KEY: ${{ inputs.api_key }}
+        INPUT_API_URL: ${{ inputs.api_url }}
+        INPUT_WAIT: ${{ inputs.wait_for_completion }}
+        INPUT_POST_COMMENT: ${{ inputs.post_comment }}
+        INPUT_TIMEOUT: ${{ inputs.timeout }}
+        EVENT_NAME: ${{ github.event_name }}
+        REPO_NAME: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: bash "${{ github.action_path }}/scripts/review.sh"
+
+    - name: Collect results
+      id: results
+      if: always() && steps.review.outputs.review_id
+      shell: bash
+      env:
+        INPUT_API_URL: ${{ inputs.api_url }}
+      run: |
+        JOB_ID="${{ steps.review.outputs.review_id }}"
+        RESPONSE=$(curl -s "$INPUT_API_URL/v1/webhooks/status?job_id=$JOB_ID")
+        STATUS=$(echo "$RESPONSE" | jq -r '.status // "unknown"')
+        echo "status=$STATUS" >> $GITHUB_OUTPUT
+
+        if [ "$STATUS" = "completed" ]; then
+          REVIEW_DATA=$(curl -s "$INPUT_API_URL/v1/webhooks/results?job_id=$JOB_ID")
+          SCORE=$(echo "$REVIEW_DATA" | jq -r '.review.score // ""')
+          echo "score=$SCORE" >> $GITHUB_OUTPUT
+        fi
