@@ -1,8 +1,19 @@
-# CodeCritic Review Action
+<p align="center">
+  <a href="https://code-critic.com/github-action-code-review">
+    <img src="https://code-critic.com/logo.svg" alt="CodeCritic" width="160" />
+  </a>
+</p>
 
-[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-CodeCritic%20Review-8b5cf6?logo=github)](https://github.com/marketplace/actions/codecritic-review)
+<p align="center">
+  <strong>AI code review for pull requests in GitHub Actions</strong>
+</p>
 
-AI-powered code review for your pull requests.
+<p align="center">
+  <a href="https://github.com/marketplace/actions/codecritic-review"><img src="https://img.shields.io/badge/Marketplace-CodeCritic%20Review-8b5cf6?logo=github" alt="Marketplace" /></a>
+  <a href="https://code-critic.com/github-action-code-review"><img src="https://img.shields.io/badge/website-code--critic.com-6366f1" alt="Website" /></a>
+  <a href="https://code-critic.com/github-code-review"><img src="https://img.shields.io/badge/docs-setup%20guide-8b5cf6" alt="Docs" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-22c55e" alt="MIT" /></a>
+</p>
 
 ## Quick Start
 
