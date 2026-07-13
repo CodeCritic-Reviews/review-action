@@ -1,6 +1,7 @@
 <p align="center">
-  <a href="https://code-critic.com/github-action-code-review">
-    <img src="https://code-critic.com/logo.svg" alt="CodeCritic" width="160" />
+  <a href="https://code-critic.com/github-action-code-review" style="text-decoration: none; display: inline-flex; align-items: center; gap: 10px;">
+    <img src="https://code-critic.com/logo.svg" alt="" width="56" height="56" />
+    <span style="font-family: 'Plus Jakarta Sans', Inter, system-ui, sans-serif; font-size: 1.875rem; font-weight: 700; letter-spacing: -0.025em; background: linear-gradient(135deg, #8baafe 0%, #a67dff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">CodeCritic</span>
   </a>
 </p>
 
