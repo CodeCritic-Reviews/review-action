@@ -1,5 +1,7 @@
 # CodeCritic Review Action
 
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-CodeCritic%20Review-8b5cf6?logo=github)](https://github.com/marketplace/actions/codecritic-review)
+
 AI-powered code review for your pull requests.
 
 ## Quick Start
@@ -11,24 +13,39 @@ on:
     types: [opened, synchronize]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: CodeCritic-Reviews/review-action@v1
         with:
           api_key: ${{ secrets.CODECRITIC_API_KEY }}
 ```
 
+The action reads pull request metadata from the GitHub event and sends it to CodeCritic. A separate `actions/checkout` step is **not required** unless you add other steps that need the workspace.
+
 ## Setup
 
-1. Get your API key from [CodeCritic Dashboard](https://code-critic.com/dashboard)
-2. Add `CODECRITIC_API_KEY` to your repository secrets (Settings → Secrets → Actions)
-3. Create `.github/workflows/codecritic.yml` with the workflow above
-4. Open a pull request — the review runs automatically
+1. Create a free account on [CodeCritic](https://code-critic.com/free-code-review) if you do not have one yet
+2. Copy your API key from the [CodeCritic Dashboard](https://code-critic.com/dashboard)
+3. Add `CODECRITIC_API_KEY` to your repository secrets (Settings → Secrets → Actions)
+4. Create `.github/workflows/codecritic.yml` with the workflow above
+5. Open a pull request - the review runs automatically
+
+## Required permissions
+
+If your repository uses restricted `GITHUB_TOKEN` defaults, the workflow needs:
+
+| Permission | Why |
+|---|---|
+| `contents: read` | Standard read access for the job |
+| `pull-requests: write` | Post the review summary as a PR comment |
+
+Add the `permissions` block from Quick Start at the workflow level (shown there).
 
 ## Inputs
 
@@ -50,7 +67,7 @@ jobs:
 
 ## Examples
 
-### Basic — run on every PR
+### Basic - run on every PR
 
 ```yaml
 - uses: CodeCritic-Reviews/review-action@v1
@@ -69,6 +86,8 @@ jobs:
 
 ### Use score in subsequent steps
 
+Outputs are strings. Compare numerically with `fromJSON`:
+
 ```yaml
 - uses: CodeCritic-Reviews/review-action@v1
   id: codecritic
@@ -76,11 +95,20 @@ jobs:
     api_key: ${{ secrets.CODECRITIC_API_KEY }}
 
 - name: Fail if score too low
-  if: steps.codecritic.outputs.score < 50
+  if: ${{ steps.codecritic.outputs.score != '' && fromJSON(steps.codecritic.outputs.score) < 50 }}
   run: |
     echo "Code quality score ${{ steps.codecritic.outputs.score }} is below threshold"
     exit 1
 ```
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| PR comment not posted | Missing `pull-requests: write` | Add the `permissions` block from Quick Start |
+| `401` / API error | Invalid or missing API key | Check `CODECRITIC_API_KEY` secret and dashboard key |
+| Job succeeds but no comment | `workflow_dispatch` or empty summary | Comments are PR-only; manual runs use the job summary |
+| Timeout warning | Large PR or slow queue | Increase `timeout` or set `wait_for_completion: 'false'` |
 
 ## AI Disclosure
 
@@ -103,7 +131,7 @@ When you use this action, the following data is sent to the CodeCritic API (`api
 - Your CodeCritic API key
 
 **What stays local:**
-- Your `GITHUB_TOKEN` is never sent to CodeCritic — it is only used to post PR comments
+- Your `GITHUB_TOKEN` is never sent to CodeCritic - it is only used to post PR comments
 
 **What happens on the server:**
 - Code is sent to an AI model provider (via OpenRouter) for analysis
@@ -126,11 +154,12 @@ Review quality depends on the AI model, code complexity, and the amount of conte
 
 ## Support & Feedback
 
+- **Setup guide:** [GitHub Action code review](https://code-critic.com/github-action-code-review)
+- **Product docs:** [GitHub code review](https://code-critic.com/github-code-review)
 - **Bug reports & feature requests:** [GitHub Issues](https://github.com/CodeCritic-Reviews/review-action/issues)
 - **Email:** support@code-critic.com
 - **Security vulnerabilities:** See [SECURITY.md](SECURITY.md)
-- **Documentation:** [code-critic.com](https://code-critic.com)
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](LICENSE)
