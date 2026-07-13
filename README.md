@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://code-critic.com/github-action-code-review">
-    <img src=".github/wordmark.svg" alt="CodeCritic" height="48" />
+    <img src=".github/wordmark.svg" alt="CodeCritic" height="48" width="270" />
   </a>
 </p>
 
