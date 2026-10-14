@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   review:
-    runs-on: socialcoding-ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: CodeCritic-Reviews/review-action@v1
         with:
