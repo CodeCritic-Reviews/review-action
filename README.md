@@ -15,6 +15,9 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-22c55e" alt="MIT" /></a>
 </p>
 
+> [!NOTE]
+> **We run CodeCritic on our own pull requests** — see [`.github/workflows/codecritic.yml`](.github/workflows/codecritic.yml) and the review comments on this repo's PRs. If it saves you review time, a ⭐ star helps other teams find it.
+
 ## Quick Start
 
 ```yaml
