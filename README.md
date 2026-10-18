@@ -18,6 +18,23 @@
 > [!NOTE]
 > **We run CodeCritic on our own pull requests** — see [`.github/workflows/codecritic.yml`](.github/workflows/codecritic.yml) and the review comments on this repo's PRs. If it saves you review time, a ⭐ star helps other teams find it.
 
+## Changelog
+
+### v1.2 (2026-10-18)
+
+- **Dogfooding workflow is live**: this repository reviews its own pull requests with the same action users install — see the review comments on merged PRs.
+- **Runner fix**: dogfooding workflow pinned to `ubuntu-latest` (previous label did not exist, so self-reviews never ran).
+- **Workflow polish**: display name cleaned up; probe/debug files removed from the repo root.
+
+### v1.1 (2026-10-14)
+
+- README overhaul: adoption-focused structure, required-permissions table, troubleshooting matrix, AI disclosure, data & privacy section.
+- Marketplace listing polish: categories, badges, and wordmark header.
+
+### v1.0 (2026-02-13)
+
+- Initial public release: PR-triggered AI review, PR comment posting, score/status outputs, wait and timeout controls.
+
 ## Quick Start
 
 ```yaml
