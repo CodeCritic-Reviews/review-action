@@ -1,4 +1,4 @@
-name: CodeCritic Review (dogfooding)
+name: CodeCritic Review
 
 on:
   pull_request:
