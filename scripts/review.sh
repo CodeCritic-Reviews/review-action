@@ -10,6 +10,12 @@ TIMEOUT="$INPUT_TIMEOUT"
 # Mask the API key in logs
 echo "::add-mask::$API_KEY"
 
+# Require jq - the script parses all event payloads with it
+if ! command -v jq >/dev/null 2>&1; then
+  echo "::error::jq is required but was not found on this runner"
+  exit 1
+fi
+
 # --- Step 1: Build request payload ---
 
 if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
@@ -107,6 +113,7 @@ fi
 
 INTERVAL=10
 ELAPSED=0
+STATUS="pending"
 
 while [ "$ELAPSED" -lt "$TIMEOUT" ]; do
   RESPONSE=$(curl -s "${API_URL}/v1/webhooks/status?job_id=$JOB_ID")
@@ -137,8 +144,6 @@ fi
 REVIEW_DATA=$(curl -s "${API_URL}/v1/webhooks/results?job_id=$JOB_ID")
 SUMMARY=$(echo "$REVIEW_DATA" | jq -r '.review.summary // "No summary available"')
 SCORE=$(echo "$REVIEW_DATA" | jq -r '.review.score // "N/A"')
-
-echo "score=$SCORE" >> "$GITHUB_OUTPUT"
 
 # Write GitHub Step Summary
 {

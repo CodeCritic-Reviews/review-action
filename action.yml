@@ -19,7 +19,7 @@ inputs:
     required: false
     default: 'true'
   post_comment:
-    description: 'Post review results as a PR comment'
+    description: 'Post review results as a PR comment from CodeCritic'
     required: false
     default: 'true'
   timeout:
